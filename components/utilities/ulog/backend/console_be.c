@@ -10,6 +10,7 @@
 
 #include <rthw.h>
 #include <ulog.h>
+#include <board.h>
 
 #ifdef ULOG_BACKEND_USING_CONSOLE
 
@@ -34,7 +35,9 @@ void ulog_console_backend_output(struct ulog_backend *backend, rt_uint32_t level
         rt_uint16_t old_flag = dev->open_flag;
 
         dev->open_flag |= RT_DEVICE_FLAG_STREAM;
-        rt_device_write(dev, 0, log, len);
+			  rt_pin_write(UART4_485_PIN, PIN_HIGH);  //tx
+				rt_device_write(dev, 0, log, len);
+        rt_pin_write(UART4_485_PIN, PIN_LOW);   //rx
         dev->open_flag = old_flag;
     }
 #else

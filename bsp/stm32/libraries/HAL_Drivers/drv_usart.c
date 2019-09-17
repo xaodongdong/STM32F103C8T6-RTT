@@ -658,7 +658,7 @@ int rt_hw_usart_init(void)
     rt_err_t result = 0;
 
     stm32_uart_get_dma_config();
-    
+
     for (int i = 0; i < obj_num; i++)
     {
         uart_obj[i].config = &uart_config[i];

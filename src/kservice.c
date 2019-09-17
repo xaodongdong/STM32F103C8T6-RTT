@@ -21,7 +21,7 @@
 
 #include <rtthread.h>
 #include <rthw.h>
-
+#include <board.h>
 #ifdef RT_USING_MODULE
 #include <dlmodule.h>
 #endif
@@ -1167,6 +1167,7 @@ void rt_kputs(const char *str)
         rt_uint16_t old_flag = _console_device->open_flag;
 
         _console_device->open_flag |= RT_DEVICE_FLAG_STREAM;
+				rt_device_write(_console_device, 0, str, rt_strlen(str));
         rt_device_write(_console_device, 0, str, rt_strlen(str));
         _console_device->open_flag = old_flag;
     }
@@ -1205,7 +1206,7 @@ void rt_kprintf(const char *fmt, ...)
         rt_uint16_t old_flag = _console_device->open_flag;
 
         _console_device->open_flag |= RT_DEVICE_FLAG_STREAM;
-        rt_device_write(_console_device, 0, rt_log_buf, length);
+				rt_device_write(_console_device, 0, rt_log_buf, length);
         _console_device->open_flag = old_flag;
     }
 #else
