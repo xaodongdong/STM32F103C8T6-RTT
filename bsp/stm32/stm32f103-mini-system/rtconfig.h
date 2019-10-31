@@ -71,15 +71,25 @@
 
 /* Device virtual file system */
 
+#define RT_USING_DFS
+#define DFS_USING_WORKDIR
+#define DFS_FILESYSTEMS_MAX 2
+#define DFS_FILESYSTEM_TYPES_MAX 2
+#define DFS_FD_MAX 16
+#define RT_USING_DFS_DEVFS
 
 /* Device Drivers */
 
 #define RT_USING_DEVICE_IPC
 #define RT_PIPE_BUFSZ 512
+//#define RT_USING_SYSTEM_WORKQUEUE
+//#define RT_SYSTEM_WORKQUEUE_STACKSIZE 2048
+//#define RT_SYSTEM_WORKQUEUE_PRIORITY 23
 #define RT_USING_SERIAL
 #define RT_SERIAL_USING_DMA
 #define RT_SERIAL_RB_BUFSZ 64
 #define RT_USING_PIN
+//#define RT_USING_RTC
 
 /* Using WiFi */
 
@@ -89,14 +99,23 @@
 
 /* POSIX layer and C standard library */
 
+#define RT_USING_LIBC
+#define RT_USING_POSIX
 
 /* Network */
 
 /* Socket abstraction layer */
 
+//#define RT_USING_SAL
+//#define SAL_USING_POSIX
 
 /* Network interface device */
 
+//#define RT_USING_NETDEV
+//#define NETDEV_USING_IFCONFIG
+//#define NETDEV_USING_PING
+//#define NETDEV_USING_NETSTAT
+//#define NETDEV_USING_AUTO_DEFAULT
 
 /* light weight TCP/IP stack */
 
@@ -131,6 +150,18 @@
 
 /* security packages */
 
+//#define PKG_USING_MBEDTLS
+
+///* Select Root Certificate */
+
+//#define PKG_USING_MBEDTLS_DIGICERT_ROOT_CA
+//#define PKG_USING_MBEDTLS_COMODOR_ROOT_CA
+//#define MBEDTLS_ECP_WINDOW_SIZE 2
+//#define MBEDTLS_SSL_MAX_CONTENT_LEN 64
+//#define MBEDTLS_MPI_MAX_SIZE 64
+//#define MBEDTLS_CTR_DRBG_KEYSIZE 32
+//#define PKG_USING_MBEDTLS_DEBUG
+//#define PKG_USING_MBEDTLS_V2710
 
 /* language packages */
 

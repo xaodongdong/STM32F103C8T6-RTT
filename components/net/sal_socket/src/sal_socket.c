@@ -25,7 +25,7 @@
 
 /* check system workqueue stack size */
 #if RT_SYSTEM_WORKQUEUE_STACKSIZE < 1536
-#error "The system workqueue stack size must more than 1536 bytes"
+//#error "The system workqueue stack size must more than 1536 bytes"
 #endif
 
 #define DBG_TAG                        "sal.skt"
