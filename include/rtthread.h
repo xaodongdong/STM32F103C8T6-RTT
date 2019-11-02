@@ -59,6 +59,7 @@ void rt_object_take_sethook(void (*hook)(struct rt_object *object));
 void rt_object_put_sethook(void (*hook)(struct rt_object *object));
 #endif
 
+//int rsa_test(void);
 /**@}*/
 
 /**
