@@ -15,7 +15,9 @@
   openssl asn1parse -in rsaprivate.pem
   ```
 
-  ![Image](C:\Users\Run\Desktop\STM32F103C8T6(RTT)\Image.png)
+  ![Image](https://github.com/xaodongdong/STM32F103C8T6-RTT/blob/rsa-lib/Image.png )
+
+  
 
 - 将重要数据data.txt使用sha1 和 rsa私钥生成对应的数字签名rsasign.bin
 
