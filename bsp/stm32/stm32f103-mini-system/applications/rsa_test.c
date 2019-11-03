@@ -29,7 +29,7 @@
 #include <rtthread.h>
 #include <stdio.h>
 #include "crypto.h"
-
+#include <string.h>
 /** @addtogroup STM32_Crypto_Examples
   * @{
   */
@@ -56,8 +56,12 @@ typedef enum {FAILED = 0, PASSED = !FAILED} TestStatus;
 
 uint8_t preallocated_buffer[4096]; /* buffer required for internal allocation of memory */
 
+const char moudlus[] = "B976AE4DEE063584B217379EF6043E59AEADD70B8DABA7C653AE4184D36BAA3BDC6DBC768A813A23133BF6517D65D4B383AA844882B6BA09D5A654DAF288CB4A0086F5338225982241CE17DE2E3BF156DE508B65C2CFB575F75DBD36419CD1FBC9DCB8970678EC4DEBE87E5C02171337186EE02BC5CBDB3EABC489DADFF956F5";
+const char privexp[] = "758250E6678DDF92F813E5D5FE22AA2EC092BCD2412D25DC6F60D57A874A8C4DE9584E34FD84EB8515C6C446D5A113A7BA20EC37D53A599DA994FDE6CC0D086000B095ABAF046AF53A84A99D9A8801D9D2278F7EB20FF19746242AD2E99B589F02C580CC3CCECDACF883523F3B3D669C01E2C5FCD9E48449326F4FF734C12C71";
+
+
 /* RSA 1024 Test Vector 1 */
-const uint8_t T1_Modulus[] =
+uint8_t T1_Modulus[] =
   {
     0xa5, 0x6e, 0x4a, 0x0e, 0x70, 0x10, 0x17, 0x58, 0x9a, 0x51, 0x87, 0xdc, 0x7e, 0xa8, 0x41, 0xd1,
     0x56, 0xf2, 0xec, 0x0e, 0x36, 0xad, 0x52, 0xa4, 0x4d, 0xfe, 0xb1, 0xe6, 0x1f, 0x7a, 0xd9, 0x91,
@@ -73,7 +77,7 @@ const uint8_t T1_pubExp[] =
     0x01, 0x00, 0x01
   };
 
-const uint8_t T1_privExp[] =
+uint8_t T1_privExp[] =
   {
     0x33, 0xa5, 0x04, 0x2a, 0x90, 0xb2, 0x7d, 0x4f, 0x54, 0x51, 0xca, 0x9b, 0xbb, 0xd0, 0xb4, 0x47,
     0x71, 0xa1, 0x01, 0xaf, 0x88, 0x43, 0x40, 0xae, 0xf9, 0x88, 0x5f, 0x2a, 0x4b, 0xbe, 0x92, 0xe8,
@@ -85,7 +89,46 @@ const uint8_t T1_privExp[] =
     0xd8, 0x0c, 0x06, 0x22, 0xad, 0x79, 0xc6, 0xdc, 0xee, 0x88, 0x35, 0x47, 0xc6, 0xa3, 0xb3, 0x25,
   };
 
-const uint8_t T1_message_1[] =
+void read_string_to_hex( const char *s, uint8_t *X )
+	{
+    size_t i, j, slen, n;
+
+    slen = strlen( s );
+		slen = 256;
+		for(i=0; i<slen/2; i++)
+		{
+			X[i] = 0;
+			for(j=0; j<2; j++)
+			{
+				if(s[i*2+j] < 0x3A)
+					n = s[i*2+j] - 0x30;
+				else
+					n = s[i*2+j] - 0x41 + 0x0A;
+				if(j==0)
+					n = n*16;
+				X[i] = X[i] + n;
+			}
+		}
+
+	}
+void printf_hex(uint8_t *X)
+	{
+    size_t i, j, slen, n;
+
+    slen = strlen( (char*)X );
+		slen = 128;
+		for(i=0; i<slen/16; i++)
+		{
+			for(j=0; j<16; j++)
+			{
+				rt_kprintf("%02X ",X[i*16+j]);
+			}
+			rt_kprintf("\r\n");
+		}
+	}
+ uint8_t T1_message_1[12] = "hello world";
+
+const uint8_t T1_message_[] =
   {
     0xcd, 0xc8, 0x7d, 0xa2, 0x23, 0xd7, 0x86, 0xdf, 0x3b, 0x45, 0xe0, 0xbb, 0xbc, 0x72, 0x13, 0x26,
     0xd1, 0xee, 0x2a, 0xf8, 0x06, 0xcc, 0x31, 0x54, 0x75, 0xcc, 0x6f, 0x0d, 0x9c, 0x66, 0xe1, 0xb6,
@@ -173,6 +216,13 @@ static void rsa_test(int argc, char *argv[])
   Crypto_DeInit();
 
   /* TEST VECTOR FOR RSA-1024  */
+	read_string_to_hex( moudlus, T1_Modulus);
+	read_string_to_hex( privexp, T1_privExp);
+	rt_kprintf("T1_Modulus:\r\n");
+	printf_hex(T1_Modulus);
+	rt_kprintf("T1_privExp:\r\n");
+	printf_hex(T1_privExp);
+	
   PubKey_st.mExponentSize = sizeof(T1_pubExp);
   PubKey_st.mModulusSize = sizeof(T1_Modulus);
   PubKey_st.pmExponent = (uint8_t *) T1_pubExp;
@@ -183,7 +233,10 @@ static void rsa_test(int argc, char *argv[])
   PrivKey_st.pmExponent = (uint8_t *)T1_privExp;
   PrivKey_st.pmModulus = (uint8_t *)T1_Modulus;
 	m_timer_start();
+	T1_message_1[11] = 0x0A;
   status = STM32_RSA_Sign_SHA1(&PrivKey_st, T1_message_1, sizeof(T1_message_1), Signature);
+	rt_kprintf("Signature:\r\n");
+	printf_hex(Signature);
 	m_timer_stop();
   if (status == RSA_SUCCESS)
   {
