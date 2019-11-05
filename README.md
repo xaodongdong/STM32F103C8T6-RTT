@@ -9,7 +9,7 @@
   openssl rsa -in rsaprivate.pem  -pubout -out rsapublic.pem
   ```
 
-- 使用asn1parse查看rsa密钥的16进制，将16进制公钥发送给STM32
+- 使用asn1parse查看rsa密钥的16进制，将16进制的模数n发送给STM32,公钥制数e默认010001
 
   ```
   openssl asn1parse -in rsaprivate.pem
